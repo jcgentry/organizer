@@ -8,17 +8,17 @@ import Data.UUID.V4 (nextRandom)
 
 ------- ONode ---------
 
-type Organizer = Tree ONode
+type OTree = Tree ONode
 
-newOrganizer :: IO Organizer
+newOrganizer :: IO OTree
 newOrganizer = do
     newId <- nextRandom
     return (Node (ONode  newId "root") [])
 
-root :: Organizer -> ONode
+root :: OTree -> ONode
 root = rootLabel
 
-children :: Organizer -> [Organizer]
+children :: OTree -> [OTree]
 children = subForest
 
 apply :: Tree ONode -> Operation -> IO (Tree ONode)

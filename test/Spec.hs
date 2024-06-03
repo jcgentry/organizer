@@ -4,7 +4,7 @@ import Test.Hspec (hspec, describe, shouldBe, it)
 main :: IO ()
 main = hspec $ do
     describe "Tests" $ do
-        it "Trivia" $ do
+        it "New child" $ do
             o <- newOrganizer
             let op = newNode "new"
             o' <- apply o op
