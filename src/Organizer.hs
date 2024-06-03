@@ -1,13 +1,9 @@
-{-# LANGUAGE DeriveGeneric #-}
-
 module Organizer (newOrganizer, draw, newNode, apply) where
 
-import Data.Serialize (Serialize)
 import Data.Tree (Tree, drawTree, Tree(Node))
 import Data.UUID (UUID, toString)
 import Data.UUID.V4 (nextRandom)
 
-import GHC.Generics (Generic)
 
 data ONode = ONode {
     nodeId      :: UUID,
@@ -15,14 +11,14 @@ data ONode = ONode {
 }
 
 internalLabel :: ONode -> String
-internalLabel n = (toString (nodeId n)) ++ " " ++ label n
+internalLabel n = toString (nodeId n) ++ " " ++ label n
 
 newOrganizer :: IO (Tree ONode)
 newOrganizer = do
     newId <- nextRandom
     return (Node (ONode  newId "root") [])
 
-data Operation = NewNode { newLabel :: String }
+newtype Operation = NewNode String
 
 newNode :: String -> Operation
 newNode = NewNode
