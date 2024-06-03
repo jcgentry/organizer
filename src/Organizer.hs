@@ -37,7 +37,7 @@ draw o = drawTree $ fmap internalLabel o
 data ONode = ONode
     { nodeId :: UUID
     , label :: String
-    }
+    } deriving (Eq, Show)
 
 instance Binary ONode where
     put n = do

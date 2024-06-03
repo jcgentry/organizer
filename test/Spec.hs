@@ -1,3 +1,4 @@
+import Data.Binary (encode, decode)
 import Organizer (newOrganizer, newNode, apply, draw, children, root, label)
 import Test.Hspec (hspec, describe, shouldBe, it)
 
@@ -11,3 +12,11 @@ main = hspec $ do
             putStrLn (draw o')
             let n = root ((children o') !! 0)
             (label n) `shouldBe` "new"
+
+    describe "Serialization" $ do
+        it "Back and forth" $ do
+            o <- newOrganizer
+            let op = newNode "new"
+            o' <- apply o op
+            let o'' = decode $ encode o'
+            o'' `shouldBe` o'
