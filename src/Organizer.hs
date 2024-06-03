@@ -6,7 +6,7 @@ import Data.UUID.V4 (nextRandom)
 
 
 
-------- Organizer ---------
+------- ONode ---------
 
 type Organizer = Tree ONode
 
@@ -15,8 +15,8 @@ newOrganizer = do
     newId <- nextRandom
     return (Node (ONode  newId "root") [])
 
-root :: Organizer -> Organizer
-root = id
+root :: Organizer -> ONode
+root = rootLabel
 
 children :: Organizer -> [Organizer]
 children = subForest
@@ -28,9 +28,6 @@ apply (Node root children) (NewNode nl) = do
 
 draw :: (Tree ONode) -> String
 draw o = drawTree $ fmap internalLabel o
-
-label :: Tree Onode -> String
-label (Node n _) = label n
 
 
 -------- ONode -----------

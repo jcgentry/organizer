@@ -9,5 +9,5 @@ main = hspec $ do
             let op = newNode "new"
             o' <- apply o op
             putStrLn (draw o')
-            let n = (children (root o')) !! 0
+            let n = root ((children o') !! 0)
             (label n) `shouldBe` "new"
