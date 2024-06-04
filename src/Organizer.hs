@@ -1,12 +1,10 @@
+{-# HLINT ignore "Use <$>" #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-{-# HLINT ignore "Use <$>" #-}
+module Organizer (OHorizon (None), newOrganizer, draw, newNode, apply, children, root, label, horizon) where
 
-{-# LANGUAGE DeriveGeneric #-}
-
-module Organizer (newOrganizer, draw, newNode, apply, children, root, label) where
-
-import Data.Binary (Binary, get, put)
+import Data.Binary (Binary)
 import Data.Tree (Tree (Node), drawTree, rootLabel, subForest)
 import Data.UUID (UUID, toString)
 import Data.UUID.V4 (nextRandom)
@@ -20,7 +18,7 @@ type OTree = Tree ONode
 newOrganizer :: IO OTree
 newOrganizer = do
     newId <- nextRandom
-    return (Node (ONode newId "root") [])
+    return (Node (ONode newId "root" None) [])
 
 root :: OTree -> ONode
 root = rootLabel
@@ -28,10 +26,10 @@ root = rootLabel
 children :: OTree -> [OTree]
 children = subForest
 
-apply :: Tree ONode -> Operation -> IO (Tree ONode)
-apply (Node r c) (NewNode nl) = do
+apply :: OTree-> Operation -> IO (Tree ONode)
+apply (Node r cs) (NewNode l h) = do
     newId <- nextRandom
-    return (Node r (c ++ [Node (ONode newId nl) []]))
+    return (Node r (cs ++ [Node (ONode newId l h) []]))
 
 draw :: Tree ONode -> String
 draw o = drawTree $ fmap internalLabel o
@@ -41,16 +39,26 @@ draw o = drawTree $ fmap internalLabel o
 data ONode = ONode
     { nodeId :: UUID
     , label :: String
-    } deriving (Eq, Show, Generic)
+    , horizon :: OHorizon
+    }
+    deriving (Eq, Show, Generic)
 
 instance Binary ONode
 
 internalLabel :: ONode -> String
 internalLabel n = toString (nodeId n) ++ " " ++ label n
 
+----- OHorizon -----
+data OHorizon = Life | TenYears | FiveYears | ThreeYears | OneYear | Epic | Project | Task | None
+    deriving (Eq, Show, Generic)
+
+instance Binary OHorizon
+
+
 ----- Operation -----
 
-newtype Operation = NewNode String
+data Operation = NewNode String OHorizon
 
-newNode :: String -> Operation
+newNode :: String -> OHorizon -> Operation
 newNode = NewNode
+
