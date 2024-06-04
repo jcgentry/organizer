@@ -2,12 +2,11 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Organizer (OHorizon (None), newOrganizer, draw, newNode, apply, children, root, label, horizon) where
+module Organizer (ONode (ONode), OTree, OHorizon (None), newOrganizer, draw, children, root, label, horizon, addTopLevelNodeToTree) where
 
 import Data.Binary (Binary)
 import Data.Tree (Tree (Node), drawTree, rootLabel, subForest)
 import Data.UUID (UUID, toString)
-import Data.UUID.V4 (nextRandom)
 
 import GHC.Generics (Generic)
 
@@ -15,10 +14,8 @@ import GHC.Generics (Generic)
 
 type OTree = Tree ONode
 
-newOrganizer :: IO OTree
-newOrganizer = do
-    newId <- nextRandom
-    return (Node (ONode newId "root" None) [])
+newOrganizer :: UUID -> OTree
+newOrganizer id = Node (ONode id "root" None) []
 
 root :: OTree -> ONode
 root = rootLabel
@@ -26,13 +23,12 @@ root = rootLabel
 children :: OTree -> [OTree]
 children = subForest
 
-apply :: OTree-> Operation -> IO (Tree ONode)
-apply (Node r cs) (NewNode l h) = do
-    newId <- nextRandom
-    return (Node r (cs ++ [Node (ONode newId l h) []]))
-
 draw :: Tree ONode -> String
 draw o = drawTree $ fmap internalLabel o
+
+addTopLevelNodeToTree :: OTree -> ONode -> OTree
+addTopLevelNodeToTree tree node = tree { subForest = (subForest tree) ++ [Node node []] }
+
 
 -------- ONode -----------
 
@@ -54,11 +50,4 @@ data OHorizon = Life | TenYears | FiveYears | ThreeYears | OneYear | Epic | Proj
 
 instance Binary OHorizon
 
-
------ Operation -----
-
-data Operation = NewNode String OHorizon
-
-newNode :: String -> OHorizon -> Operation
-newNode = NewNode
 
