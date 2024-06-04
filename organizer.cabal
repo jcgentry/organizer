@@ -28,6 +28,7 @@ library
       Document
       Lib
       Organizer
+      ReplTools
       Tag
   other-modules:
       Paths_organizer

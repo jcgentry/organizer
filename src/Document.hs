@@ -1,8 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Document (Document (Document), OHorizon (None), root, newNode, newDocument, apply, children, label, horizon, tree) where 
+module Document (Document (Document), OHorizon (None), root, newNode, newDocument, apply, children, label, horizon, tree, draw) where 
 
-import Organizer (OTree, ONode (ONode), OHorizon (None) , newOrganizer, addTopLevelNodeToTree, children, label, horizon, root)
+import Organizer (OTree, ONode (ONode), OHorizon (None) , newOrganizer, addTopLevelNodeToTree, children, label, horizon, root, drawTree)
 import Tag
 import Data.UUID.V4
 import Data.UUID
@@ -34,6 +34,10 @@ newDocument = do
 addTopLevelNode :: Document -> ONode -> Document
 addTopLevelNode doc node = 
     doc { organizer = addTopLevelNodeToTree (organizer doc) node }
+
+draw :: Document -> String
+draw (Document tree _) = drawTree tree
+
 
 
 ----- Operation -----

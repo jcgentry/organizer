@@ -2,33 +2,43 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Organizer (ONode (ONode), OTree, OHorizon (None), newOrganizer, draw, children, root, label, horizon, addTopLevelNodeToTree) where
+module Organizer (
+    ONode (ONode),
+    OTree,
+    OHorizon (None),
+    newOrganizer,
+    drawTree,
+    children,
+    root,
+    label,
+    horizon,
+    addTopLevelNodeToTree,
+) where
 
 import Data.Binary (Binary)
-import Data.Tree (Tree (Node), drawTree, rootLabel, subForest)
+import qualified Data.Tree (Tree (Node), drawTree, rootLabel, subForest)
 import Data.UUID (UUID, toString)
 
 import GHC.Generics (Generic)
 
 ------- OTree ---------
 
-type OTree = Tree ONode
+type OTree = Data.Tree.Tree ONode
 
 newOrganizer :: UUID -> OTree
-newOrganizer rootNodeId = Node (ONode rootNodeId "root" None) []
+newOrganizer rootNodeId = Data.Tree.Node (ONode rootNodeId "root" None) []
 
 root :: OTree -> ONode
-root = rootLabel
+root = Data.Tree.rootLabel
 
 children :: OTree -> [OTree]
-children = subForest
+children = Data.Tree.subForest
 
-draw :: Tree ONode -> String
-draw o = drawTree $ fmap internalLabel o
+drawTree :: Data.Tree.Tree ONode -> String
+drawTree o = Data.Tree.drawTree $ fmap internalLabel o
 
 addTopLevelNodeToTree :: OTree -> ONode -> OTree
-addTopLevelNodeToTree tree node = tree { subForest = subForest tree ++ [Node node []] }
-
+addTopLevelNodeToTree tree node = tree{Data.Tree.subForest = Data.Tree.subForest tree ++ [Data.Tree.Node node []]}
 
 -------- ONode -----------
 
@@ -49,5 +59,3 @@ data OHorizon = Life | TenYears | FiveYears | ThreeYears | OneYear | Epic | Proj
     deriving (Eq, Show, Generic)
 
 instance Binary OHorizon
-
-

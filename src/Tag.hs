@@ -13,8 +13,8 @@ import GHC.Generics (Generic)
 type TTree = Tree Tag
 
 newTagTree :: UUID -> TTree
-newTagTree id = 
-    Node (Tag id "") []
+newTagTree rootTagId = 
+    Node (Tag rootTagId "") []
 
 ----- Tag -----
 
