@@ -41,13 +41,13 @@ addTopLevelNode doc node =
 data Operation = NewNode UUID String OHorizon
 
 apply :: Document -> Operation -> Document
-apply document (NewNode id label horizon) = 
+apply document (NewNode rootNodeId rootNodeLabel rootNodeHorizon) = 
     let 
-        newNode = ONode id label horizon
+        node = ONode rootNodeId rootNodeLabel rootNodeHorizon
     in
-        addTopLevelNode document newNode
+        addTopLevelNode document node
 
 newNode :: String -> OHorizon -> IO Operation
-newNode label horizon = do
-    id <- nextRandom
-    return (NewNode id label horizon)
+newNode nodeLabel nodeHorizon = do
+    newNodeId <- nextRandom
+    return (NewNode newNodeId nodeLabel nodeHorizon)

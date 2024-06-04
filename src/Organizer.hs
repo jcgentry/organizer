@@ -15,7 +15,7 @@ import GHC.Generics (Generic)
 type OTree = Tree ONode
 
 newOrganizer :: UUID -> OTree
-newOrganizer id = Node (ONode id "root" None) []
+newOrganizer rootNodeId = Node (ONode rootNodeId "root" None) []
 
 root :: OTree -> ONode
 root = rootLabel
@@ -27,7 +27,7 @@ draw :: Tree ONode -> String
 draw o = drawTree $ fmap internalLabel o
 
 addTopLevelNodeToTree :: OTree -> ONode -> OTree
-addTopLevelNodeToTree tree node = tree { subForest = (subForest tree) ++ [Node node []] }
+addTopLevelNodeToTree tree node = tree { subForest = subForest tree ++ [Node node []] }
 
 
 -------- ONode -----------
