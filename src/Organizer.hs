@@ -2,12 +2,16 @@
 
 {-# HLINT ignore "Use <$>" #-}
 
+{-# LANGUAGE DeriveGeneric #-}
+
 module Organizer (newOrganizer, draw, newNode, apply, children, root, label) where
 
 import Data.Binary (Binary, get, put)
 import Data.Tree (Tree (Node), drawTree, rootLabel, subForest)
 import Data.UUID (UUID, toString)
 import Data.UUID.V4 (nextRandom)
+
+import GHC.Generics (Generic)
 
 ------- OTree ---------
 
@@ -37,17 +41,9 @@ draw o = drawTree $ fmap internalLabel o
 data ONode = ONode
     { nodeId :: UUID
     , label :: String
-    } deriving (Eq, Show)
+    } deriving (Eq, Show, Generic)
 
-instance Binary ONode where
-    put n = do
-        put (nodeId n)
-        put (label n)
-
-    get = do
-        nid <- get
-        l <- get
-        return (ONode nid l)
+instance Binary ONode
 
 internalLabel :: ONode -> String
 internalLabel n = toString (nodeId n) ++ " " ++ label n
