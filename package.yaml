@@ -25,6 +25,7 @@ dependencies:
 - containers
 - binary
 - uuid
+- mtl
 
 ghc-options:
 - -Wall

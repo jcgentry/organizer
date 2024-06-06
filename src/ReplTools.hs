@@ -1,7 +1,8 @@
 module ReplTools where
-
-import Control.Monad.State.Lazy
+import  Control.Monad.State.Lazy 
 import Document
 
-new :: State Document ()
-new = return 
+-- new :: IO (State Document ())   -- Use Monad transformer instead
+-- new = do
+
+-- newDoc :: IO (Document)
